@@ -1,0 +1,9 @@
+
+.mapWrapper {
+  width: 100%;
+  height: 500px;
+}
+button {
+  padding: 10px;
+  font-size: 150%;
+}

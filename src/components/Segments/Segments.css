@@ -1,0 +1,9 @@
+.topListWrapper {
+  display: flex;
+}
+.topList {
+  width: 33%;
+}
+.topList > ul {
+  padding-left: 0;
+}

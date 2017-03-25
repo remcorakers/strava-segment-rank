@@ -1,0 +1,17 @@
+li {
+  display: flex;
+}
+
+.count {
+  font-size: 150%;
+  width: 50px;
+}
+
+.segmentName {
+  margin: 5px 5px 0 0;
+}
+
+.distance {
+  color: #333;
+  margin: 5px 0 0 0;
+}

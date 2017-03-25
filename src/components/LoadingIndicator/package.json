@@ -1,0 +1,6 @@
+{
+  "name": "LoadingIndicator",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./LoadingIndicator.js"
+}

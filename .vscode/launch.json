@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        // {
+        //     "type": "node",
+        //     "request": "launch",
+        //     "name": "Launch Program",
+        //     "program": "${workspaceRoot}\\yarn start",
+        //     "cwd": "${workspaceRoot}"
+        // },
+        // {
+        //     "name": "Launch with yarn",
+        //     "type": "node",
+        //     "request": "launch",
+        //     "runtimeExecutable": "yarn",
+        //     "runtimeArgs": [
+        //         "start"
+        //     ],
+        //     //"port": 5858,
+        //     "cwd": "${workspaceRoot}",
+        //     "timeout": 20000
+        // },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Process",
+            "port": 5858,
+            "smartStep": true,
+            "sourceMaps": true
+        }
+    ]
+}
