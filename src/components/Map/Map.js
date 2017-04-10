@@ -144,7 +144,7 @@ class Map extends React.Component {
     this.setState({ bounds: props.bounds });
     this.setState({ zoom: props.zoom });
 
-    this.drawRectangles(props.bounds, props.zoom, this.state.latStepSize, this.state.lngStepSize, this.state.selectedArea);
+    this.drawRectangles(props.bounds, props.zoom, this.state.latStepSize, this.state.lngStepSize, this.state.selectedArea, this.state.gridSize);
 
     // Register Google Analytics event
     if (window.ga) {
@@ -156,12 +156,12 @@ class Map extends React.Component {
     }
   }
 
-  drawRectangles(bounds, zoom, latStepSize, lngStepSize, selectedArea) {
+  drawRectangles(bounds, zoom, latStepSize, lngStepSize, selectedArea, gridSize) {
     // Remove existing rectangles
     this.state.rectangles.forEach(r => r.setMap(null));
     this.setState({ rectangles: [] });
 
-    if ((zoom <= 12 && this.state.gridSize === 'small') || (zoom <= 11 && this.state.gridSize === 'medium') || (zoom <= 10 && this.state.gridSize === 'large')) {
+    if ((zoom <= 12 && gridSize === 'small') || (zoom <= 11 && gridSize === 'medium') || (zoom <= 10 && gridSize === 'large')) {
       this.setState({ showZoomMessage: true });
       return;
     }
@@ -221,12 +221,13 @@ class Map extends React.Component {
     }
     const latStepSize = multiplier * this.baseLatStepSize;
     const lngStepSize = multiplier * this.baseLngStepSize;
+    const gridSize = e.target.value;
     this.setState({ latStepSize });
     this.setState({ lngStepSize });
-    this.setState({ gridSize: e.target.value });
+    this.setState({ gridSize });
     this.setState({ selectedArea: null });
 
-    this.drawRectangles(this.state.bounds, this.state.zoom, latStepSize, lngStepSize, null);
+    this.drawRectangles(this.state.bounds, this.state.zoom, latStepSize, lngStepSize, null, gridSize);
   }
 
   onActivityTypeChange(e) {
@@ -279,7 +280,7 @@ Map.propTypes = {
 Map.defaultProps = {
   center: { lat: 52.38, lng: 4.6462 },
   zoom: 14,
-  activityType: 'both',
+  activityType: 'running',
 };
 
 export default controllable(withStyles(s)(Map), ['center', 'zoom', 'hoverKey', 'clickKey']);

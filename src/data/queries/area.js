@@ -44,7 +44,11 @@ async function getStravaListLeaderboard(db, segmentId, page) {
 }
 
 async function getStravaSegmentsInArea(db, bounds, activityType) {
-  const args = { bounds, activity_type: activityType };
+  const args = { bounds };
+  if (activityType !== null) {
+    args.activity_type = activityType;
+  }
+
   const cachedResult = await getStravaCallFromCache(db, 'explore', args);
   if (cachedResult) {
     return cachedResult;
@@ -71,7 +75,7 @@ async function getLeaderboard(db, segment) {
   while (!leaderboard || leaderboard.entry_count > leaderboard.entries.length) {
     const leaderboardData = await getStravaListLeaderboard(db, segment.id, page); // eslint-disable-line no-await-in-loop, no-loop-func
 
-    if (leaderboardData.entries.length === 0) {
+    if (!leaderboardData || !leaderboardData.entries || leaderboardData.entries.length === 0) {
       break;
     }
 
@@ -89,7 +93,7 @@ async function getLeaderboard(db, segment) {
   }
 
   const updatedSegment = segment;
-  updatedSegment.leaderboard = leaderboard;
+  updatedSegment.leaderboard = leaderboard || [];
 
   return updatedSegment;
 }
@@ -103,9 +107,7 @@ function countEntries(segment) {
 }
 
 async function getArea(db, bounds, activityType, maxAge = 1) {
-  const nullableActivityType = activityType === 'both' ? null : activityType;
-
-  const existingArea = await db.collection('areas').findOne({ bounds, nullableActivityType });
+  const existingArea = await db.collection('areas').findOne({ bounds, activityType });
   if (existingArea && existingArea.created && moment(existingArea.created).isAfter(moment.subtract(maxAge, 'days'))) {
     console.log('return existing area from database');
     return existingArea;
@@ -149,13 +151,14 @@ const area = {
       type: FloatType,
     },
     activityType: {
-      description: 'Type of segments to return. Values can be running, cycling or both.',
+      description: 'Type of segments to return. Values can be running or riding.',
       type: StringType,
     },
   },
   async resolve({ db }, { north, south, west, east, activityType = 'both' }) {
     const bounds = `${south},${west},${north},${east}`;
-    return getArea(db, bounds, activityType);
+    const nullableActivityType = activityType === 'both' ? null : activityType;
+    return getArea(db, bounds, nullableActivityType);
   },
 };
 
