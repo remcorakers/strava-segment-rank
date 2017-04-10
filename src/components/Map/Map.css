@@ -5,5 +5,33 @@
 }
 button {
   padding: 10px;
+  margin: 0 0 10px 0;
   font-size: 150%;
+}
+@media only screen and (max-width : 1024px)  {
+  .mapWrapper {
+    height: 400px;
+  }
+}
+.search {
+  display: flex;
+  margin: 0 0 10px 0;
+}
+.searchBoxWrapper {
+  width: 100%;
+  overflow: hidden;
+}
+.findMe {
+  width: 75px;
+}
+.findMe button {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border-radius: 0;
+  margin: 0;
+}
+.zoomMessage {
+  font-size: 130%;
+  margin: 0 0 10px 0;
 }

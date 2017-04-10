@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import {
   GraphQLFloat as FloatType,
+  GraphQLString as StringType,
 } from 'graphql';
 import AreaType from '../types/AreaType';
 
@@ -20,7 +21,7 @@ async function saveStravaCall(db, method, args, result) {
 }
 
 async function getStravaListLeaderboard(db, segmentId, page) {
-  const args = { id: segmentId, per_page: 200, page };
+  const args = { id: segmentId, per_page: 200, page, date_range: 'this_year' };
   const cachedResult = await getStravaCallFromCache(db, 'listLeaderboard', args);
 
   if (cachedResult) {
@@ -42,8 +43,8 @@ async function getStravaListLeaderboard(db, segmentId, page) {
   return result;
 }
 
-async function getStravaSegmentsInArea(db, bounds) {
-  const args = { bounds, activity_type: 'running' };
+async function getStravaSegmentsInArea(db, bounds, activityType) {
+  const args = { bounds, activity_type: activityType };
   const cachedResult = await getStravaCallFromCache(db, 'explore', args);
   if (cachedResult) {
     return cachedResult;
@@ -54,7 +55,7 @@ async function getStravaSegmentsInArea(db, bounds) {
       if (err) {
         reject(new Error(err));
       }
-      console.log(`fetched explore for bounds ${bounds}`);
+      console.log(`fetched explore for bounds ${bounds} and activityType ${activityType}`);
       resolve(res.segments);
     });
   });
@@ -101,23 +102,26 @@ function countEntries(segment) {
   return updatedSegment;
 }
 
-async function getArea(db, bounds, forceUpdate = false) {
-  const existingArea = await db.collection('areas').findOne({ bounds });
-  if (existingArea && !forceUpdate) {
+async function getArea(db, bounds, activityType, maxAge = 1) {
+  const nullableActivityType = activityType === 'both' ? null : activityType;
+
+  const existingArea = await db.collection('areas').findOne({ bounds, nullableActivityType });
+  if (existingArea && existingArea.created && moment(existingArea.created).isAfter(moment.subtract(maxAge, 'days'))) {
+    console.log('return existing area from database');
     return existingArea;
   }
 
   // Get top segments in given bounding box
-  const segmentsInArea = await getStravaSegmentsInArea(db, bounds);
+  const segmentsInArea = await getStravaSegmentsInArea(db, bounds, activityType);
 
   // Get segment details
   const segmentsWithLeaderboard = await Promise.all(segmentsInArea.map(segment => getLeaderboard(db, segment)));
-
   const segmentsWithEntryCounts = await Promise.all(segmentsWithLeaderboard.map(segment => countEntries(segment)));
 
   const newArea = {
     segments: segmentsWithEntryCounts,
     bounds,
+    activityType,
     createdAt: new Date(),
   };
 
@@ -128,20 +132,30 @@ async function getArea(db, bounds, forceUpdate = false) {
 const area = {
   type: AreaType,
   args: {
-    lat: {
-      description: 'The latitude of the area.',
+    north: {
+      description: 'The northern border of the area.',
       type: FloatType,
     },
-    lng: {
-      description: 'The longitude of the area.',
+    west: {
+      description: 'The western border the area.',
       type: FloatType,
+    },
+    south: {
+      description: 'The southern border the area.',
+      type: FloatType,
+    },
+    east: {
+      description: 'The eastern border of the area.',
+      type: FloatType,
+    },
+    activityType: {
+      description: 'Type of segments to return. Values can be running, cycling or both.',
+      type: StringType,
     },
   },
-  async resolve({ db }, { lat, lng }) {
-    const latConst = 0.005;
-    const lngConst = 0.01;
-    const bounds = `${lat - latConst},${lng - lngConst},${lat + latConst},${lng + lngConst}`;
-    return getArea(db, bounds);
+  async resolve({ db }, { north, south, west, east, activityType = 'both' }) {
+    const bounds = `${south},${west},${north},${east}`;
+    return getArea(db, bounds, activityType);
   },
 };
 

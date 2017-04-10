@@ -21,6 +21,11 @@
 }
 
 .info {
-  font-size: 150%;
+  font-size: 130%;
   margin: 20px 0;
+}
+
+h1 {
+  margin: 0.5em 0;
+  font-size: 1.7em;
 }

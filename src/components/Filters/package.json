@@ -1,0 +1,6 @@
+{
+  "name": "Filters",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Filters.js"
+}

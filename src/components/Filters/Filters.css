@@ -1,0 +1,19 @@
+.filterWrapper {
+    margin: 0 0 10px 0;
+}
+.filterWrapper:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.filter {
+    float: left;
+}
+.select {
+    font-size: 130%;
+    margin: 5px 15px 5px 5px;
+}
+.label {
+    font-size: 130%;
+    margin: 5px 0;
+}

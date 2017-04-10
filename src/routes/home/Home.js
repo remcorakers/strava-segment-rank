@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import FontAwesome from 'react-fontawesome';
 import fetch from '../../core/fetch';
@@ -17,8 +17,9 @@ class Home extends React.Component {
     };
   }
 
-  async onClickArea(lat, lng) {
+  async onClickArea(north, south, west, east, activityType) {
     this.setState({ loading: true });
+    console.log(`Fetch area for bounds north:${north},south:${south},west:${west},east:${east},activityType:${activityType}`);
     const resp = await fetch('/graphql', {
       method: 'post',
       headers: {
@@ -26,14 +27,15 @@ class Home extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: `{area(lat:${lat},lng:${lng}){bounds,segments{id,name,distance,entriesLast7Days,entriesLast30Days,entriesLast365Days}}}`,
+        query: `{area(north:${north},south:${south},west:${west},east:${east},activityType:"${activityType}"){bounds,activityType,segments{id,name,distance,entriesLast7Days,entriesLast30Days,entriesLast365Days}}}`,
       }),
       credentials: 'include',
     });
     const { data } = await resp.json();
+    this.setState({ loading: false });
     if (!data || !data.area) throw new Error('Failed to load the area.');
     this.setState({ segments: data.area.segments });
-    this.setState({ loading: false });
+    this.setState({ activityType: data.area.activityType });
   }
 
   render() {
@@ -44,7 +46,7 @@ class Home extends React.Component {
           <Map onClickArea={this.onClickArea} />
           {!this.state.segments && <div className={s.info}><FontAwesome name="info-circle" /> Select an area to see popular segments</div>}
           {this.state.segments && <LoadingIndicator loaded={!this.state.loading}>
-            <Segments segments={this.state.segments} />
+            <Segments segments={this.state.segments} activityType={this.state.activityType} />
           </LoadingIndicator>}
         </div>
       </div>

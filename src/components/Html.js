@@ -32,7 +32,7 @@ class Html extends React.Component {
     return (
       <html className="no-js" lang="en">
         <head>
-          <script src="https://maps.google.com/maps/api/js?libraries=places&sensor=false" />
+          <script src="https://maps.google.com/maps/api/js?key=AIzaSyCEJfc7YgNBp4AZXevKDZDTotj7CVWKFTE&libraries=places" />
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <title>{title}</title>

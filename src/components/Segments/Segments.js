@@ -19,19 +19,24 @@ class Segments extends React.Component {
       <div className={s.topListWrapper}>
         <div className={s.topList}>
           <h2>Top last 7 days</h2>
-          {segmentsLast7Days.length > 0 ? <ul>{segmentsLast7Days}</ul> : <p>No segments found</p>}
+          {segmentsLast7Days.length > 0 ? <ul>{segmentsLast7Days}</ul> : <p className={s.noSegmentsFound}>No segments found.</p>}
         </div>
         <div className={s.topList}>
           <h2>Top last 30 days</h2>
-          {segmentsLast30Days.length > 0 ? <ul>{segmentsLast30Days}</ul> : <p>No segments found</p>}
+          {segmentsLast30Days.length > 0 ? <ul>{segmentsLast30Days}</ul> : <p className={s.noSegmentsFound}>No segments found.</p>}
         </div>
         <div className={s.topList}>
-          <h2>Top last 365 days</h2>
-          {segmentsLast365Days.length > 0 ? <ul>{segmentsLast365Days}</ul> : <p>No segments found</p>}
+          <h2>Top this year</h2>
+          {segmentsLast365Days.length > 0 ? <ul>{segmentsLast365Days}</ul> : <p className={s.noSegmentsFound}>No segments found.</p>}
         </div>
       </div>
     );
   }
 }
+
+Segments.propTypes = {
+  segments: PropTypes.array.isRequired,
+  activityType: PropTypes.string.isRequired,
+};
 
 export default withStyles(s)(Segments);

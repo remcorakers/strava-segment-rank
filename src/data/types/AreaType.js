@@ -19,6 +19,7 @@ const AreaType = new ObjectType({
   name: 'Area',
   fields: {
     bounds: { type: new NonNull(StringType) },
+    activityType: { type: StringType },
     segments: { type: new List(SegmentType) },
   },
 });
