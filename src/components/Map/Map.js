@@ -1,5 +1,6 @@
 /* global google ga */
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import GoogleMapReact from 'google-map-react';
