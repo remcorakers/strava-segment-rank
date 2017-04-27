@@ -1,7 +1,7 @@
 # Strava Segment Rank
 
-![GitHub release](https://img.shields.io/github/release/remcorakers/strava-segment-rank.svg?style=flat-square)
-![Travis](https://img.shields.io/travis/remcorakers/strava-segment-rank.svg?style=flat-square)
+[![GitHub release](https://img.shields.io/github/release/remcorakers/strava-segment-rank.svg?style=flat-square)](https://github.com/remcorakers/strava-segment-rank/tags)
+[![Travis](https://img.shields.io/travis/remcorakers/strava-segment-rank.svg?style=flat-square)](https://travis-ci.org/remcorakers/strava-segment-rank)
 
 View the most popular Strava segments in a geographical area. Check out the [demo](https://strava-segment-rank.azurewebsites.net/).
 

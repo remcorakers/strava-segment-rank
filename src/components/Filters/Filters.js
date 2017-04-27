@@ -7,14 +7,29 @@ function Filters({ onActivityTypeChange, onGridChange, gridSize, activityType })
     <div className={s.filterWrapper}>
       <div className={s.filter}>
         <div className={s.label}>Activity type:</div>
-        <button className={activityType === 'running' ? [s.active, s.buttonLink].join(' ') : s.buttonLink} onClick={() => onActivityTypeChange('running')}>Running</button>
-        <button className={activityType === 'riding' ? [s.active, s.buttonLink].join(' ') : s.buttonLink} onClick={() => onActivityTypeChange('riding')}>Cycling</button>
+        <button
+          className={activityType === 'running' ? [s.active, s.buttonLink].join(' ') : s.buttonLink}
+          onClick={() => onActivityTypeChange('running')}
+        >Running</button>
+        <button
+          className={activityType === 'riding' ? [s.active, s.buttonLink].join(' ') : s.buttonLink}
+          onClick={() => onActivityTypeChange('riding')}
+        >Cycling</button>
       </div>
       <div className={s.filter}>
         <div className={s.label}>Grid size:</div>
-        <button className={gridSize === 'small' ? [s.active, s.buttonLink].join(' ') : s.buttonLink} onClick={() => onGridChange('small')}>Small</button>
-        <button className={gridSize === 'medium' ? [s.active, s.buttonLink].join(' ') : s.buttonLink} onClick={() => onGridChange('medium')}>Medium</button>
-        <button className={gridSize === 'large' ? [s.active, s.buttonLink].join(' ') : s.buttonLink} onClick={() => onGridChange('large')}>Large</button>
+        <button
+          className={gridSize === 'small' ? [s.active, s.buttonLink].join(' ') : s.buttonLink}
+          onClick={() => onGridChange('small')}
+        >Small</button>
+        <button
+          className={gridSize === 'medium' ? [s.active, s.buttonLink].join(' ') : s.buttonLink}
+          onClick={() => onGridChange('medium')}
+        >Medium</button>
+        <button
+          className={gridSize === 'large' ? [s.active, s.buttonLink].join(' ') : s.buttonLink}
+          onClick={() => onGridChange('large')}
+        >Large</button>
       </div>
     </div>
   );
