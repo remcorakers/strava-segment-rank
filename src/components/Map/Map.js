@@ -117,9 +117,9 @@ class Map extends React.Component {
     });
   }
 
-  onGridChange(e) {
+  onGridChange(gridSize) {
     let multiplier = 1;
-    switch (e.target.value) {
+    switch (gridSize) {
       case 'medium':
         multiplier = 3; break;
       case 'large':
@@ -129,7 +129,7 @@ class Map extends React.Component {
     }
     const latStepSize = multiplier * this.baseLatStepSize;
     const lngStepSize = multiplier * this.baseLngStepSize;
-    const gridSize = e.target.value;
+
     this.setState({ latStepSize });
     this.setState({ lngStepSize });
     this.setState({ gridSize });
@@ -138,8 +138,8 @@ class Map extends React.Component {
     this.drawRectangles(this.state.bounds, this.state.zoom, latStepSize, lngStepSize, null, gridSize);
   }
 
-  onActivityTypeChange(e) {
-    this.setState({ activityType: e.target.value });
+  onActivityTypeChange(value) {
+    this.setState({ activityType: value });
   }
 
   setMap(map) {
@@ -246,7 +246,10 @@ class Map extends React.Component {
           </div>
         </div>
         <div>
-          <Filters onGridChange={this.onGridChange} onActivityTypeChange={this.onActivityTypeChange} />
+          <Filters
+            onGridChange={this.onGridChange} onActivityTypeChange={this.onActivityTypeChange}
+            activityType={this.state.activityType} gridSize={this.state.gridSize}
+          />
         </div>
         {this.state.showZoomMessage && <div><FontAwesome name="info-circle" /> Zoom in to select an area</div>}
         <div className={s.mapWrapper}>
@@ -267,12 +270,7 @@ class Map extends React.Component {
 
 Map.propTypes = {
   center: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-  zoom: PropTypes.number, // @controllable
-//  hoverKey: PropTypes.string, // @controllable
-//  clickKey: PropTypes.string, // @controllable
-//  onCenterChange: PropTypes.func, // @controllable generated fn
-//  onZoomChange: PropTypes.func, // @controllable generated fn
-//  onHoverKeyChange: PropTypes.func, // @controllable generated fn
+  zoom: PropTypes.number,
   onClickArea: PropTypes.func.isRequired,
   activityType: PropTypes.string,
 };
