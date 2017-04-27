@@ -1,6 +1,6 @@
 # Strava Segment Rank
 
-View the most popular Strava segments in a geographical area.
+View the most popular Strava segments in a geographical area. Check out the [demo](https://strava-segment-rank.azurewebsites.net/).
 
 ## Requirements
 
@@ -10,17 +10,14 @@ View the most popular Strava segments in a geographical area.
 ## Getting started
 
 1. Clone this repository and run `yarn install`
-2. Configure mongodb connection string in `/src/config.js`, default value is `mongodb://localhost:27017/strava-segment-rank`.
-3. Create a file `/data/strava_config` with the following contents, replacing `YOUR-STRAVA-ACCESS-TOKEN` with your personal Strava API token:
+2. The application uses the following environment variables. Overwrite them where needed.
 ```
-{
-  "access_token"    :"YOUR-STRAVA-ACCESS-TOKEN"
-  , "client_id"     :"Your apps Client ID (Required for oauth)"
-  , "client_secret" :"Your apps Client Secret (Required for oauth)"
-  , "redirect_uri"  :"Your apps Authorization Redirection URI (Required for oauth)"
-}
+STRAVA_ACCESS_TOKEN: required; your Strava API access token
+DATABASE_URL: MongoDB connection string, default value is mongodb://localhost:27017/strava-segment-rank
+GOOGLE_MAPS_KEY: optional; Google Maps key
+GOOGLE_ANALYTICS_TRACKING_ID: optional; Google Analytics tracking ID
 ```
-4. Run with `yarn start`
+3. Run with `yarn start`
 
 ## Thanks to
 

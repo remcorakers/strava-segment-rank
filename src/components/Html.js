@@ -8,7 +8,7 @@
  */
 
 import React, { PropTypes } from 'react';
-import { analytics } from '../config';
+import { keys } from '../config';
 
 class Html extends React.Component {
   static propTypes = {
@@ -32,7 +32,10 @@ class Html extends React.Component {
     return (
       <html className="no-js" lang="en">
         <head>
-          <script src="https://maps.google.com/maps/api/js?key=AIzaSyCEJfc7YgNBp4AZXevKDZDTotj7CVWKFTE&libraries=places" />
+          <script
+            src={keys.google.maps ? `https://maps.google.com/maps/api/js?key=${keys.google.maps}&libraries=places` :
+            'https://maps.google.com/maps/api/js?libraries=places'}
+          />
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <title>{title}</title>
@@ -56,15 +59,15 @@ class Html extends React.Component {
             dangerouslySetInnerHTML={{ __html: children }}
           />
           {scripts.map(script => <script key={script} src={script} />)}
-          {analytics.google.trackingId &&
+          {keys.google.trackingId &&
             <script
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html:
               'window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;' +
-              `ga('create','${analytics.google.trackingId}','auto');ga('send','pageview')` }}
+              `ga('create','${keys.google.trackingId}','auto');ga('send','pageview')` }}
             />
           }
-          {analytics.google.trackingId &&
+          {keys.google.trackingId &&
             <script src="https://www.google-analytics.com/analytics.js" async defer />
           }
         </body>
