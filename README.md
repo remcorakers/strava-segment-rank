@@ -24,4 +24,4 @@ View the most popular Strava segments in a geographical area.
 
 ## Thanks to
 
-- (React Starter Kit)[https://github.com/kriasoft/react-starter-kit]
+- [React Starter Kit](https://github.com/kriasoft/react-starter-kit)
