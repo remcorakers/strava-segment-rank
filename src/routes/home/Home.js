@@ -47,7 +47,7 @@ class Home extends React.Component {
           <h1>Strava Segment Rank</h1>
           <Map onClickArea={this.onClickArea} />
           {!this.state.segments && <div className={s.info}><FontAwesome name="info-circle" /> Select an area to see popular segments</div>}
-          {this.state.segments && <LoadingIndicator loaded={!this.state.loading}>
+          {(this.state.segments || this.state.loading) && <LoadingIndicator loaded={!this.state.loading}>
             <Segments segments={this.state.segments} activityType={this.state.activityType} />
           </LoadingIndicator>}
         </div>

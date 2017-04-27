@@ -52,7 +52,7 @@ class MapSearchBox extends Component {
     };
 
     const AutocompleteItem = ({ formattedSuggestion }) => (
-      <div className={s.suggestionItem}>
+      <div className={[s.suggestionItem, 'needsclick'].join(' ')}>
         <i className="fa fa-map-marker" />
         <strong>{formattedSuggestion.mainText}</strong>{' '}
         <small className="text-muted">{formattedSuggestion.secondaryText}</small>
