@@ -1,8 +1,28 @@
 .searchInput {
   font-size: 150%;
   padding: 10px;
+  box-sizing: border-box;
   width: 100%;
-}
-input {
   border-radius: 0;
+  overflow: hidden;
+}
+
+.autocompleteContainer {
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 2px 2px;
+  position: absolute;
+  z-index: 9999;
+  width: 100%;
+  min-height: 100px;
+  top: 50px;
+}
+
+.suggestionItem {
+  padding: 4px;
+  text-align: left;
+}
+
+.suggestionItem i {
+  margin-right: 8px;
 }

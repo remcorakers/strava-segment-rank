@@ -14,6 +14,7 @@ class Home extends React.Component {
     this.state = {
       segments: null,
       loading: false,
+      activityType: 'running',
     };
   }
 
@@ -27,7 +28,8 @@ class Home extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: `{area(north:${north},south:${south},west:${west},east:${east},activityType:"${activityType}"){bounds,activityType,segments{id,name,distance,entriesLast7Days,entriesLast30Days,entriesLast365Days}}}`,
+        query: `{area(north:${north},south:${south},west:${west},east:${east},activityType:"${activityType}")` +
+        '{bounds,activityType,segments{id,name,distance,entriesLast7Days,entriesLast30Days,entriesLast365Days}}}',
       }),
       credentials: 'include',
     });

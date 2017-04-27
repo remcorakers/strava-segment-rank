@@ -1,29 +1,22 @@
-
 .mapWrapper {
   width: 100%;
   height: 500px;
 }
-button {
-  padding: 10px;
-  margin: 0 0 10px 0;
-  font-size: 150%;
-}
-@media only screen and (max-width : 1024px)  {
-  .mapWrapper {
-    height: 400px;
-  }
-}
+
 .search {
   display: flex;
-  margin: 0 0 10px 0;
+  margin: 0 0 10px;
 }
+
 .searchBoxWrapper {
   width: 100%;
-  overflow: hidden;
 }
+
 .findMe {
   width: 75px;
+  height: 51px;
 }
+
 .findMe button {
   width: 100%;
   height: 100%;
@@ -31,7 +24,9 @@ button {
   border-radius: 0;
   margin: 0;
 }
-.zoomMessage {
-  font-size: 130%;
-  margin: 0 0 10px 0;
+
+@media only screen and (max-width: 1024px) {
+  .mapWrapper {
+    height: 400px;
+  }
 }

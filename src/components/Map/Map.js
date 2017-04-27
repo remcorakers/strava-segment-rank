@@ -1,3 +1,4 @@
+/* global google ga */
 import React, { PropTypes } from 'react';
 import FontAwesome from 'react-fontawesome';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -8,6 +9,19 @@ import MapSearchBox from './../MapSearchBox';
 import s from './Map.css';
 
 class Map extends React.Component {
+  static roundToPrecision(number, precision) {
+    const factor = 10 ** precision;
+    const tempNumber = number * factor;
+    const roundedTempNumber = Math.round(tempNumber);
+    return roundedTempNumber / factor;
+  }
+
+  static round(value, stepSize) {
+    const roundToStepsize = Math.round(value / stepSize) * stepSize;
+    const roundToPrecision = Map.roundToPrecision(roundToStepsize, 3);
+    return roundToPrecision;
+  }
+
   constructor(props) {
     super(props);
 
@@ -32,7 +46,6 @@ class Map extends React.Component {
     this.onPlacesChanged = this.onPlacesChanged.bind(this);
     this.centerOnMyLocation = this.centerOnMyLocation.bind(this);
     this.onClickArea = this.onClickArea.bind(this);
-    this.round = this.round.bind(this);
     this.onGridChange = this.onGridChange.bind(this);
     this.onActivityTypeChange = this.onActivityTypeChange.bind(this);
   }
@@ -41,57 +54,17 @@ class Map extends React.Component {
     this.centerOnMyLocation();
   }
 
-  addRectangle(north, south, west, east, selected) {
-    if (!this.state.map) {
-      return;
-    }
-
-    const rectangle = new google.maps.Rectangle({
-      strokeColor: selected ? '#ff0000' : '#123abc',
-      strokeOpacity: 1,
-      strokeWeight: selected ? 4 : 1,
-      fillColor: '#abc234',
-      fillOpacity: 0.0,
-      map: this.state.map,
-      bounds: {
-        north,
-        south,
-        east,
-        west,
-      },
-      zIndex: selected ? 999 : 998,
-    });
-    rectangle.addListener('click', this.onClickArea);
-
-    const rectangles = this.state.rectangles;
-    rectangles.push(rectangle);
-    this.setState({ rectangles });
-  }
-
-  roundToPrecision(number, precision) {
-    const factor = 10 ** precision;
-    const tempNumber = number * factor;
-    const roundedTempNumber = Math.round(tempNumber);
-    return roundedTempNumber / factor;
-  }
-
-  round(value, stepSize) {
-    const roundToStepsize = Math.round(value / stepSize) * stepSize;
-    const roundToPrecision = this.roundToPrecision(roundToStepsize, 3);
-    return roundToPrecision;
-  }
-
   onClickArea(props) {
-    const lat = this.round(props.latLng.lat(), this.state.latStepSize);
-    const lng = this.round(props.latLng.lng(), this.state.lngStepSize);
+    const lat = Map.round(props.latLng.lat(), this.state.latStepSize);
+    const lng = Map.round(props.latLng.lng(), this.state.lngStepSize);
 
     console.log(`Clicked in area lat:${lat}, lng:${lng}`);
     this.setState({ selectedArea: { lat, lng } });
 
-    const north = this.roundToPrecision(lat + (this.state.latStepSize / 2), 3);
-    const south = this.roundToPrecision(lat - (this.state.latStepSize / 2), 3);
-    const west = this.roundToPrecision(lng - (this.state.lngStepSize / 2), 3);
-    const east = this.roundToPrecision(lng + (this.state.lngStepSize / 2), 3);
+    const north = Map.roundToPrecision(lat + (this.state.latStepSize / 2), 3);
+    const south = Map.roundToPrecision(lat - (this.state.latStepSize / 2), 3);
+    const west = Map.roundToPrecision(lng - (this.state.lngStepSize / 2), 3);
+    const east = Map.roundToPrecision(lng + (this.state.lngStepSize / 2), 3);
 
     this.props.onClickArea(north, south, west, east, this.state.activityType);
 
@@ -114,37 +87,16 @@ class Map extends React.Component {
     }
   }
 
-  setMap(map) {
-    this.setState({ map });
-  }
-
-  centerOnMyLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        this.setState({
-          center: {
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          },
-        });
-      },
-    );
-
-    // Register Google Analytics event
-    if (window.ga) {
-      ga('send', {
-        hitType: 'event',
-        eventCategory: 'Map',
-        eventAction: 'centerOnMyLocation',
-      });
-    }
-  }
-
   onChange(props) {
     this.setState({ bounds: props.bounds });
     this.setState({ zoom: props.zoom });
 
-    this.drawRectangles(props.bounds, props.zoom, this.state.latStepSize, this.state.lngStepSize, this.state.selectedArea, this.state.gridSize);
+    this.drawRectangles(props.bounds,
+                        props.zoom,
+                        this.state.latStepSize,
+                        this.state.lngStepSize,
+                        this.state.selectedArea,
+                        this.state.gridSize);
 
     // Register Google Analytics event
     if (window.ga) {
@@ -156,55 +108,11 @@ class Map extends React.Component {
     }
   }
 
-  drawRectangles(bounds, zoom, latStepSize, lngStepSize, selectedArea, gridSize) {
-    // Remove existing rectangles
-    this.state.rectangles.forEach(r => r.setMap(null));
-    this.setState({ rectangles: [] });
-
-    if ((zoom <= 12 && gridSize === 'small') || (zoom <= 11 && gridSize === 'medium') || (zoom <= 10 && gridSize === 'large')) {
-      this.setState({ showZoomMessage: true });
-      return;
-    }
-    this.setState({ showZoomMessage: false });
-
-    const startLat = this.round(bounds.se.lat, latStepSize);
-    const startLng = this.round(bounds.nw.lng, lngStepSize);
-
-    const endLat = this.round(bounds.nw.lat, latStepSize) + latStepSize;
-    const endLng = this.round(bounds.se.lng, lngStepSize) + lngStepSize;
-
-    let count = 0;
-    for (let lat = Math.min(startLat, endLat); lat <= Math.max(startLat, endLat); lat += latStepSize) {
-      for (let lng = Math.min(startLng, endLng); lng <= Math.max(startLng, endLng); lng += lngStepSize) {
-        const north = lat + (latStepSize / 2);
-        const south = lat - (latStepSize / 2);
-        const west = lng - (lngStepSize / 2);
-        const east = lng + (lngStepSize / 2);
-
-        const selected = selectedArea && selectedArea.lat === this.round(lat, latStepSize) &&
-          selectedArea.lng === this.round(lng, lngStepSize);
-
-        this.addRectangle(north, south, west, east, selected);
-
-        count += 1;
-        if (count > 300) {
-          console.log(`Maximum rectenagles of ${count} reached. Stopping rendering.`);
-          return;
-        }
-      }
-    }
-  }
-
-  onPlacesChanged(place) {
-    if (!place.geometry || !place.geometry.location) {
-      console.log('Returned place contains no geometry');
-      return;
-    }
-
+  onPlacesChanged(lat, lng) {
     this.setState({
       center: {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
+        lat,
+        lng,
       },
     });
   }
@@ -234,6 +142,98 @@ class Map extends React.Component {
     this.setState({ activityType: e.target.value });
   }
 
+  setMap(map) {
+    this.setState({ map });
+  }
+
+  addRectangle(north, south, west, east, selected) {
+    if (!this.state.map) {
+      return;
+    }
+
+    const rectangle = new google.maps.Rectangle({
+      strokeColor: selected ? '#ff0000' : '#123abc',
+      strokeOpacity: 1,
+      strokeWeight: selected ? 4 : 1,
+      fillColor: '#abc234',
+      fillOpacity: 0.0,
+      map: this.state.map,
+      bounds: {
+        north,
+        south,
+        east,
+        west,
+      },
+      zIndex: selected ? 999 : 998,
+    });
+    rectangle.addListener('click', this.onClickArea);
+
+    const rectangles = this.state.rectangles;
+    rectangles.push(rectangle);
+    this.setState({ rectangles });
+  }
+
+  centerOnMyLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.setState({
+          center: {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          },
+        });
+      },
+    );
+
+    // Register Google Analytics event
+    if (window.ga) {
+      ga('send', {
+        hitType: 'event',
+        eventCategory: 'Map',
+        eventAction: 'centerOnMyLocation',
+      });
+    }
+  }
+
+  drawRectangles(bounds, zoom, latStepSize, lngStepSize, selectedArea, gridSize) {
+    // Remove existing rectangles
+    this.state.rectangles.forEach(r => r.setMap(null));
+    this.setState({ rectangles: [] });
+
+    if ((zoom <= 12 && gridSize === 'small') || (zoom <= 11 && gridSize === 'medium') || (zoom <= 10 && gridSize === 'large')) {
+      this.setState({ showZoomMessage: true });
+      return;
+    }
+    this.setState({ showZoomMessage: false });
+
+    const startLat = Map.round(bounds.se.lat, latStepSize);
+    const startLng = Map.round(bounds.nw.lng, lngStepSize);
+
+    const endLat = Map.round(bounds.nw.lat, latStepSize) + latStepSize;
+    const endLng = Map.round(bounds.se.lng, lngStepSize) + lngStepSize;
+
+    let count = 0;
+    for (let lat = Math.min(startLat, endLat); lat <= Math.max(startLat, endLat); lat += latStepSize) {
+      for (let lng = Math.min(startLng, endLng); lng <= Math.max(startLng, endLng); lng += lngStepSize) {
+        const north = lat + (latStepSize / 2);
+        const south = lat - (latStepSize / 2);
+        const west = lng - (lngStepSize / 2);
+        const east = lng + (lngStepSize / 2);
+
+        const selected = selectedArea && selectedArea.lat === Map.round(lat, latStepSize) &&
+          selectedArea.lng === Map.round(lng, lngStepSize);
+
+        this.addRectangle(north, south, west, east, selected);
+
+        count += 1;
+        if (count > 300) {
+          console.log(`Maximum rectenagles of ${count} reached. Stopping rendering.`);
+          return;
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <div>
@@ -248,7 +248,7 @@ class Map extends React.Component {
         <div>
           <Filters onGridChange={this.onGridChange} onActivityTypeChange={this.onActivityTypeChange} />
         </div>
-        {this.state.showZoomMessage && <div className={s.zoomMessage}><FontAwesome name="info-circle" /> Zoom in to select an area</div>}
+        {this.state.showZoomMessage && <div><FontAwesome name="info-circle" /> Zoom in to select an area</div>}
         <div className={s.mapWrapper}>
           <GoogleMapReact
             onGoogleApiLoaded={({ map }) => this.setMap(map)}
@@ -266,13 +266,13 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
-  center: PropTypes.object, // @controllable
+  center: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   zoom: PropTypes.number, // @controllable
-  hoverKey: PropTypes.string, // @controllable
-  clickKey: PropTypes.string, // @controllable
-  onCenterChange: PropTypes.func, // @controllable generated fn
-  onZoomChange: PropTypes.func, // @controllable generated fn
-  onHoverKeyChange: PropTypes.func, // @controllable generated fn
+//  hoverKey: PropTypes.string, // @controllable
+//  clickKey: PropTypes.string, // @controllable
+//  onCenterChange: PropTypes.func, // @controllable generated fn
+//  onZoomChange: PropTypes.func, // @controllable generated fn
+//  onHoverKeyChange: PropTypes.func, // @controllable generated fn
   onClickArea: PropTypes.func.isRequired,
   activityType: PropTypes.string,
 };

@@ -6,14 +6,26 @@ import s from './Segments.css';
 
 class Segments extends React.Component {
   render() {
-    const segmentsLast7Days = _.filter(_.orderBy(this.props.segments, 'entriesLast7Days', 'desc'), s => s.entriesLast7Days > 0).map((segment, i) =>
-      <SegmentListItem key={i} segmentId={segment.id} name={segment.name} count={segment.entriesLast7Days} distance={segment.distance} />);
+    const segmentsLast7Days = _.filter(_.orderBy(this.props.segments, 'entriesLast7Days', 'desc'),
+      x => x.entriesLast7Days > 0).map(segment =>
+        <SegmentListItem
+          key={segment.id} segmentId={segment.id} name={segment.name}
+          count={segment.entriesLast7Days} distance={segment.distance}
+        />);
 
-    const segmentsLast30Days = _.filter(_.orderBy(this.props.segments, 'entriesLast30Days', 'desc'), s => s.entriesLast30Days > 0).map((segment, i) =>
-      <SegmentListItem key={i} segmentId={segment.id} name={segment.name} count={segment.entriesLast30Days} distance={segment.distance} />);
+    const segmentsLast30Days = _.filter(_.orderBy(this.props.segments, 'entriesLast30Days', 'desc'),
+    x => x.entriesLast30Days > 0).map(segment =>
+      <SegmentListItem
+        key={segment.id} segmentId={segment.id} name={segment.name}
+        count={segment.entriesLast30Days} distance={segment.distance}
+      />);
 
-    const segmentsLast365Days = _.filter(_.orderBy(this.props.segments, 'entriesLast365Days', 'desc'), s => s.entriesLast365Days > 0).map((segment, i) =>
-      <SegmentListItem key={i} segmentId={segment.id} name={segment.name} count={segment.entriesLast365Days} distance={segment.distance} />);
+    const segmentsLast365Days = _.filter(_.orderBy(this.props.segments, 'entriesLast365Days', 'desc'),
+    x => x.entriesLast365Days > 0).map(segment =>
+      <SegmentListItem
+        key={segment.id} segmentId={segment.id} name={segment.name}
+        count={segment.entriesLast365Days} distance={segment.distance}
+      />);
 
     return (
       <div className={s.topListWrapper}>
@@ -35,8 +47,7 @@ class Segments extends React.Component {
 }
 
 Segments.propTypes = {
-  segments: PropTypes.array.isRequired,
-  activityType: PropTypes.string.isRequired,
+  segments: PropTypes.array.isRequired, // eslint-disable-line
 };
 
 export default withStyles(s)(Segments);
