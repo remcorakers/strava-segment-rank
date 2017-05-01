@@ -1,7 +1,7 @@
 # Strava Segment Rank
 
 [![GitHub release](https://img.shields.io/github/release/remcorakers/strava-segment-rank.svg?style=flat-square)](https://github.com/remcorakers/strava-segment-rank/tags)
-[![Travis](https://img.shields.io/travis/remcorakers/strava-segment-rank.svg?style=flat-square)](https://travis-ci.org/remcorakers/strava-segment-rank)
+[![Travis](https://img.shields.io/travis/remcorakers/strava-segment-rank/master.svg?style=flat-square)](https://travis-ci.org/remcorakers/strava-segment-rank)
 [![Code Climate](https://img.shields.io/codeclimate/github/remcorakers/strava-segment-rank.svg?style=flat-square)](https://codeclimate.com/github/remcorakers/strava-segment-rank)
 [![Gemnasium](https://img.shields.io/gemnasium/remcorakers/strava-segment-rank.svg?style=flat-square)](https://gemnasium.com/remcorakers/strava-segment-rank)
 
@@ -15,7 +15,7 @@ View the most popular Strava segments in a geographical area. Check out the [dem
 ## Getting started
 
 1. Clone this repository and run `yarn install`
-2. The application uses the following environment variables. Overwrite them where needed.
+2. The application uses the following environment variables. Set them where needed.
 ```
 STRAVA_ACCESS_TOKEN: required; your Strava API access token
 DATABASE_URL: MongoDB connection string, default value is mongodb://localhost:27017/strava-segment-rank
