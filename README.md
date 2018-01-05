@@ -4,6 +4,7 @@
 [![Travis](https://img.shields.io/travis/remcorakers/strava-segment-rank/master.svg?style=flat-square)](https://travis-ci.org/remcorakers/strava-segment-rank)
 [![Code Climate](https://img.shields.io/codeclimate/github/remcorakers/strava-segment-rank.svg?style=flat-square)](https://codeclimate.com/github/remcorakers/strava-segment-rank)
 [![Gemnasium](https://img.shields.io/gemnasium/remcorakers/strava-segment-rank.svg?style=flat-square)](https://gemnasium.com/remcorakers/strava-segment-rank)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fremcorakers%2Fstrava-segment-rank.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fremcorakers%2Fstrava-segment-rank?ref=badge_shield)
 
 View the most popular Strava segments in a geographical area. Check out the [demo](https://strava-segment-rank.azurewebsites.net/).
 
@@ -27,3 +28,7 @@ GOOGLE_ANALYTICS_TRACKING_ID: optional; Google Analytics tracking ID
 ## Thanks to
 
 - [React Starter Kit](https://github.com/kriasoft/react-starter-kit)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fremcorakers%2Fstrava-segment-rank.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fremcorakers%2Fstrava-segment-rank?ref=badge_large)
